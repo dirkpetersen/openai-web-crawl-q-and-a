@@ -1,8 +1,10 @@
+#! /usr/bin/env python3
 
-import requests
+import os, sys, requests
 
 # Attempting to access the webpage
-url = "https://wiki.ohsu.edu/display/ACC/"
+url = os.getenv('DOC_URL')
+print(f'Trying to connect to {url}')
 
 try:
     response = requests.get(url)
