@@ -27,7 +27,8 @@ openai.api_key = os.getenv('OPENAI_API_KEY')
 print('openai.api_key:',openai.api_key)
 
 # Define root domain to crawl
-full_url = os.getenv('DOC_URL')
+full_url = os.getenv('DOC_URL_ROOT')
+suffixes = os.getenv('DOC_URL_SUFFIXES')
 domain = os.getenv('DOC_DOMAIN')
 print('full_url:', full_url)
 
@@ -116,15 +117,20 @@ def get_domain_hyperlinks(local_domain, url):
 ### Step 4
 ################################################################################
 
-def crawl(url):
+def crawl(url, suffixes):
     # Parse the URL and get the domain
     local_domain = urlparse(url).netloc
 
+    urls = []
+    urls.append(url)
+    for s in suffixes.split(','):
+        urls.append(f'{url}{s}/')
+    
     # Create a queue to store the URLs to crawl
-    queue = deque([url])
+    queue = deque(urls)
 
     # Create a set to store the URLs that have already been seen (no duplicates)
-    seen = set([url])
+    seen = set(urls)
 
     # Create a directory to store the text files
     if not os.path.exists("text/"):
@@ -170,7 +176,7 @@ def crawl(url):
                 queue.append(link)
                 seen.add(link)
 
-crawl(full_url)
+crawl(full_url, suffixes)
 
 ################################################################################
 ### Step 5

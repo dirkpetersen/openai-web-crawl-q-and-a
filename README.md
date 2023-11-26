@@ -10,7 +10,16 @@ In this modified example we are going to put settings and API keys into envionme
 First make sure that your openai api key is set yo envionment var OPENAI_API_KEY:
 
 ```
-echo "export OPENAI_API_KEY=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" >> ~/.openairc
+echo "export OPENAI_API_KEY=sk-P1Fua1pF5xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" >> ~/.openairc
+```
+
+Install the requirements into a virtual environment 
+
+```
+python3 -m venv ~/.local/share/docbot
+source ~/.local/share/docbot/bin/activate
+pip3 install -r requirements.txt
+
 ```
 
 Then set the website you want to crawl in `docbotrc` along with some other configs:
@@ -20,6 +29,7 @@ export DOC_URL=https://wiki.yourdomain.edu/display/MYWIKI
 export DOC_DOMAIN=wiki.yourdomain.edu
 export OPENSSL_CONF=./openssl.cnf
 source ~/.openairc
+source ~/.local/share/docbot/bin/activate
 ```
 
 and source `docbotrc` 
