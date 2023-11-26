@@ -21,11 +21,13 @@ from ast import literal_eval
 HTTP_URL_PATTERN = r'^http[s]{0,1}://.+$'
 
 # Define OpenAI api_key
-# openai.api_key = '<Your API Key>'
+openai.api_key = os.getenv('OPENAI_API_KEY')
+print('openai.api_key:',openai.api_key)
 
 # Define root domain to crawl
-domain = "openai.com"
-full_url = "https://openai.com/"
+full_url = os.getenv('DOC_URL')
+domain = os.getenv('DOC_DOMAIN')
+print('full_url:', full_url)
 
 # Create a class to parse the HTML and get the hyperlinks
 class HyperlinkParser(HTMLParser):
@@ -162,11 +164,11 @@ def crawl(url):
 
         # Get the hyperlinks from the URL and add them to the queue
         for link in get_domain_hyperlinks(local_domain, url):
-            if link not in seen:
+            if link not in seen and link.startswith(url):
                 queue.append(link)
                 seen.add(link)
 
-crawl(full_url)
+# crawl(full_url)
 
 ################################################################################
 ### Step 5
@@ -174,7 +176,7 @@ crawl(full_url)
 
 def remove_newlines(serie):
     serie = serie.str.replace('\n', ' ')
-    serie = serie.str.replace('\\n', ' ')
+    serie = serie.str.replace('\\n', ' ', False)
     serie = serie.str.replace('  ', ' ')
     serie = serie.str.replace('  ', ' ')
     return serie
@@ -396,4 +398,6 @@ def answer_question(
 
 print(answer_question(df, question="What day is it?", debug=False))
 
-print(answer_question(df, question="What is our newest embeddings model?"))
+print(answer_question(df, question="How can I request one GPU and some local scratch space."))
+
+
